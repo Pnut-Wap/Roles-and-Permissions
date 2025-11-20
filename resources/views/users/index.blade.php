@@ -2,10 +2,10 @@
     <x-slot name="header">
         <div class="flex justify-between">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Roles') }}
+                {{ __('Users') }}
             </h2>
 
-            <a href="{{ route('roles.create') }}" class="text-white bg-slate-700 text-sm rounded-md p-2">
+            <a href="{{ route('users.create') }}" class="text-white bg-slate-700 text-sm rounded-md p-2">
                 Create
             </a>
         </div>
@@ -20,27 +20,29 @@
                     <tr class="border-b">
                         <th class="px-6 py-3 text-left">#</th>
                         <th class="px-6 py-3 text-left">Name</th>
-                        <th class="px-6 py-3 text-left">Permissions</th>
+                        <th class="px-6 py-3 text-left">Email</th>
+                        <th class="px-6 py-3 text-left">Roles</th>
                         <th class="px-6 py-3 text-left">Create</th>
                         <th class="px-6 py-3 text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white">
-                    @forelse ($roles as $role)
+                    @forelse ($users as $user)
                         <tr class="border-b">
-                            <td class="px-6 py-3 text-left">{{ $role->id }}</td>
-                            <td class="px-6 py-3 text-left">{{ $role->name }}</td>
-                            <td class="px-6 py-3 text-left">{{ $role->permissions->pluck('name')->implode(', ') }}</td>
+                            <td class="px-6 py-3 text-left">{{ $user->id }}</td>
+                            <td class="px-6 py-3 text-left">{{ $user->name }}</td>
+                            <td class="px-6 py-3 text-left">{{ $user->email }}</td>
+                            <td class="px-6 py-3 text-left">{{ $user->roles->pluck('name')->implode(', ') }}</td>
                             <td class="px-6 py-3 text-left">
-                                {{ \Carbon\Carbon::parse($role->created_at)->format('d M, Y') }}
+                                {{ \Carbon\Carbon::parse($user->created_at)->format('d M, Y') }}
                             </td>
                             <td class="px-6 py-3 text-center flex space-x-2">
-                                <a href="{{ route('roles.edit', $role->id) }}"
+                                <a href="{{ route('users.edit', $user->id) }}"
                                     class="text-white bg-slate-700 text-sm rounded-md p-2">
                                     Edit
                                 </a>
 
-                                <form action="{{ route('roles.destroy', $role->id) }}" method="post"
+                                <form action="{{ route('users.destroy', $user->id) }}" method="POST"
                                     onsubmit="return confirm('Are you sure?')" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
@@ -52,14 +54,14 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-3 text-center text-gray-500">No permissions found.</td>
+                            <td colspan="4" class="px-6 py-3 text-center text-gray-500">No users found.</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
 
             <div class="my-3">
-                {{ $roles->links() }}
+                {{ $users->links() }}
             </div>
 
         </div>

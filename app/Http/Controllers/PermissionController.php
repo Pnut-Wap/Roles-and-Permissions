@@ -4,9 +4,21 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class PermissionController extends Controller
+class PermissionController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:view permissions', only: ['index']),
+            new Middleware('permission:edit permissions', only: ['edit', 'update']),
+            new Middleware('permission:create permissions', only: ['create', 'store']),
+            new Middleware('permission:delete permissions', only: ['destroy']),
+        ];
+    }
+
     public function index()
     {
         $permissions = Permission::latest()->paginate(10);
@@ -55,8 +67,7 @@ class PermissionController extends Controller
         $permission->delete();
 
         return redirect()
-                ->route('permissions.index')
-                ->with('success', 'Permission deleted successfully.');
+            ->route('permissions.index')
+            ->with('success', 'Permission deleted successfully.');
     }
-
 }

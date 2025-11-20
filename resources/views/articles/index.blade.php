@@ -5,9 +5,12 @@
                 {{ __('Articles') }}
             </h2>
 
-            <a href="{{ route('articles.create') }}" class="text-white bg-slate-700 text-sm rounded-md p-2">
-                Create
-            </a>
+            @can('create articles')
+                <a href="{{ route('articles.create') }}" class="text-white bg-slate-700 text-sm rounded-md p-2">
+                    Create
+                </a>
+            @endcan
+
         </div>
     </x-slot>
 
@@ -35,19 +38,23 @@
                                 {{ \Carbon\Carbon::parse($article->created_at)->format('d M, Y') }}
                             </td>
                             <td class="px-6 py-3 text-center flex space-x-2">
-                                <a href="{{ route('articles.edit', $article->id) }}"
-                                    class="text-white bg-slate-700 text-sm rounded-md p-2">
-                                    Edit
-                                </a>
+                                @can('edit articles')
+                                    <a href="{{ route('articles.edit', $article->id) }}"
+                                        class="text-white bg-slate-700 text-sm rounded-md p-2">
+                                        Edit
+                                    </a>
+                                @endcan
 
-                                <form action="{{ route('articles.destroy', $article->id) }}" method="POST"
-                                    onsubmit="return confirm('Are you sure?')" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-white bg-red-700 text-sm rounded-md p-2">
-                                        Delete
-                                    </button>
-                                </form>
+                                @can('delete articles')
+                                    <form action="{{ route('articles.destroy', $article->id) }}" method="POST"
+                                        onsubmit="return confirm('Are you sure?')" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-white bg-red-700 text-sm rounded-md p-2">
+                                            Delete
+                                        </button>
+                                    </form>
+                                @endcan
                             </td>
                         </tr>
                     @empty

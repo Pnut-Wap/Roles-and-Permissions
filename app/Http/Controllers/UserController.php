@@ -32,7 +32,9 @@ class UserController extends Controller implements HasMiddleware
      */
     public function create()
     {
-        //
+        $roles = Role::orderBy('name', 'asc')->get();
+
+        return view('users.create', compact('roles'));
     }
 
     /**

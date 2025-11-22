@@ -5,9 +5,11 @@
                 {{ __('Users') }}
             </h2>
 
-            <a href="{{ route('users.create') }}" class="text-white bg-slate-700 text-sm rounded-md p-2">
-                Create
-            </a>
+            @can('create users')
+                <a href="{{ route('users.create') }}" class="text-white bg-slate-700 text-sm rounded-md p-2">
+                    Create
+                </a>
+            @endcan
         </div>
     </x-slot>
 

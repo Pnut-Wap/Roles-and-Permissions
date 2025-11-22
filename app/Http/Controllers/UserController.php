@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
-use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
 class UserController extends Controller implements HasMiddleware
 {
@@ -27,9 +28,6 @@ class UserController extends Controller implements HasMiddleware
         return view('users.index', compact('users'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $roles = Role::orderBy('name', 'asc')->get();
@@ -37,12 +35,27 @@ class UserController extends Controller implements HasMiddleware
         return view('users.create', compact('roles'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name'      => 'required|string',
+            'email'     => 'required|string|email|unique:users,email',
+            'password'  => 'required|min:5|confirmed',
+            'role'      => 'nullable|array',
+            'role.*'    => 'string',
+        ]);
+
+        $user = User::create([
+            'name'      => $validated['name'],
+            'email'     => $validated['email'],
+            'password'  => Hash::make($validated['password']),
+        ]);
+
+        $user->syncRoles($validated['role'] ?? []);
+
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'User created successfully');
     }
 
     public function edit(User $user)
@@ -77,11 +90,12 @@ class UserController extends Controller implements HasMiddleware
     }
 
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'User deleted successfully.');
     }
 }

@@ -56,11 +56,11 @@
                         </div>
 
                         <div>
-                            <label for="confirm_password" class="text-lg font-medium">Confirm Password</label>
+                            <label for="password_confirmation" class="text-lg font-medium">Confirm Password</label>
                             <div class="my-3">
                                 <input type="password" class="border-gray-300 shadow-sm w-1/2 rounded-lg"
-                                    placeholder="Confirm Password" name="confirm_password" id="confirm_password"
-                                    value="{{ old('confirm_password') }}">
+                                    placeholder="Confirm Password" name="password_confirmation"
+                                    id="password_confirmation" value="{{ old('confirm_password') }}">
 
                                 @error('confirm_password')
                                     <p class="text-red-500 font-medium">{{ $message }}</p>
@@ -77,7 +77,6 @@
                                     <label for="role-{{ $role->id }}">{{ $role->name }}</label>
                                 </div>
                             @empty
-                                <p>No roles found!</p>
                             @endforelse
                         </div>
 

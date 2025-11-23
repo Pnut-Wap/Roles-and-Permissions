@@ -47,16 +47,21 @@
 
                         <div class="grid grid-cols-4 mb-3">
                             @forelse ($roles as $role)
-                                <div class="mt-3">
+                                @if ($role->name !== 'superadmin' || auth()->user()->hasRole('superadmin'))
+                                    <div class="mt-3">
+                                        <input type="checkbox" class="rounded" name="role[]"
+                                            value="{{ $role->name }}"
+                                            {{ $hasRoles->contains($role->id) ? 'checked' : '' }}
+                                            id="role-{{ $role->id }}">
 
-                                    <input type="checkbox" class="rounded" name="role[]" value="{{ $role->name }}"
-                                        {{ $hasRoles->contains($role->id) ? 'checked' : '' }}
-                                        id="role-{{ $role->id }}">
-                                    <label for="role-{{ $role->id }}">{{ $role->name }}</label>
-                                </div>
+                                        <label for="role-{{ $role->id }}">{{ $role->name }}</label>
+                                    </div>
+                                @endif
+
                             @empty
                                 <p>No roles found!</p>
                             @endforelse
+
                         </div>
 
                         <button type="submit"

@@ -69,7 +69,7 @@
                         </div>
 
                         <div class="grid grid-cols-4 mb-3">
-                            @forelse ($roles as $role)
+                            {{-- @forelse ($roles as $role)
                                 <div class="mt-3">
 
                                     <input type="checkbox" class="rounded" name="role[]" value="{{ $role->name }}"
@@ -77,7 +77,17 @@
                                     <label for="role-{{ $role->id }}">{{ $role->name }}</label>
                                 </div>
                             @empty
-                            @endforelse
+                            @endforelse --}}
+
+                            @foreach ($roles as $role)
+                                @if ($role->name !== 'superadmin' || auth()->user()->hasRole('superadmin'))
+                                    <div class="mt-3">
+                                        <input type="checkbox" class="rounded" name="role[]"
+                                            value="{{ $role->name }}" id="role-{{ $role->id }}">
+                                        <label for="role-{{ $role->id }}">{{ $role->name }}</label>
+                                    </div>
+                                @endif
+                            @endforeach
                         </div>
 
                         <button type="submit"
